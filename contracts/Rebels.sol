@@ -44,6 +44,7 @@ contract Rebels is ERC721, Ownable {
   address public rendererAddress;
   address public minterAddress;
   string public contractURI;
+  bytes32 public provenanceHash;
 
   constructor(
     string memory name_,
@@ -82,6 +83,10 @@ contract Rebels is ERC721, Ownable {
 
   function setContractURI(string memory contractURI_) external onlyOwner {
     contractURI = contractURI_;
+  }
+
+  function setProvenanceHash(bytes32 provenanceHash_) external onlyOwner {
+    provenanceHash = provenanceHash_;
   }
 
   function _beforeTokenTransfer(address from, address to, uint256 id) internal override {
