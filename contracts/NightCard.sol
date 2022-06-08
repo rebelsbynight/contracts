@@ -71,6 +71,7 @@ contract NightCard is ERC721A, Ownable {
   }
 
   function mint(uint256 number, bytes32[] calldata proof) external payable {
+    require(tx.origin == msg.sender, "Trying to mint from a contract");
     require(mintAuthorizerAddress != address(0), "Mint authorizer address unset");
 
     IRebelsMintAuthorizer mintAuthorizer = IRebelsMintAuthorizer(mintAuthorizerAddress);
@@ -82,6 +83,7 @@ contract NightCard is ERC721A, Ownable {
   }
 
   function reveal(uint256[] calldata tokenIDs) external {
+    require(tx.origin == msg.sender, "Trying to reveal from a contract");
     require(revealContractAddress != address(0), "Reveal contract address unset");
 
     uint256[] memory newTokenIDs = new uint256[](tokenIDs.length);
