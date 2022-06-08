@@ -129,8 +129,8 @@ contract NightCard is ERC721A, Ownable {
   function _getRandomAvailableTokenId() private returns (uint256) {
     uint256 randomNum = uint256(keccak256(abi.encode(
         tx.origin, tx.gasprice, block.number, block.timestamp,
-        block.difficulty, blockhash(block.number - 1), address(this),
-        _numAvailableTokens)));
+        block.difficulty, block.coinbase, blockhash(block.number - 1),
+        address(this), _numAvailableTokens)));
 
     uint256 randomIndex = randomNum % _numAvailableTokens;
     return _getAvailableTokenAtIndex(randomIndex);
