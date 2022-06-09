@@ -5,6 +5,8 @@ pragma solidity ^0.8.4;
 interface IRebelsMintInfo {
   function getMintName() external view returns (string memory);
   function getMintActive() external view returns (bool);
+  function getMintStartTime() external view returns (uint256);
+  function getMintEndTime() external view returns (uint256);
 
   function getProofRequired() external view returns (bool);
   function getTotalMintLimit() external view returns (uint256);

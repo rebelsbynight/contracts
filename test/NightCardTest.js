@@ -73,7 +73,7 @@ describe("Minting contract", function () {
     });
 
     it("Verify that merkle is disable", async function () {
-      expect(await baseMinterContract.getProofRequired()).to.equal(false);
+      expect(await baseMinterContract.getProofRequired()).to.false;
     });
 
     it("Setting the mint auth system", async function () {

@@ -44,6 +44,14 @@ abstract contract BaseMinter is IRebelsMintAuthorizer, IRebelsMintInfo, ERC165St
     return _startTime <= block.timestamp && block.timestamp < _endTime;
   }
 
+  function getMintStartTime() external view override returns (uint256) {
+    return _startTime;
+  }
+
+  function getMintEndTime() external view override returns (uint256) {
+    return _endTime;
+  }
+
   function getTotalMintLimit() external view override returns (uint256) {
     return _totalMintLimit;
   }

@@ -20,6 +20,9 @@ describe("Dutch minting contract", function () {
   let user2;
   let addrs;
 
+  let startOfPeriod;
+  let endOfPeriod;
+
   const OneMinutes = 1 * 60;
   const TenMinutes = 10 * 60;
 
@@ -30,7 +33,7 @@ describe("Dutch minting contract", function () {
     // Create the Dutch contract
     DutchMinter = await ethers.getContractFactory("DutchMintAuthorizer", owner);
 
-    // Setup the bying windows
+    // Setup the buying windows
     startTime = await getLastBlockTime();
 
     // Period description
@@ -50,6 +53,27 @@ describe("Dutch minting contract", function () {
       startOfPeriod,
       endOfPeriod
     );
+  });
+
+  describe("Check timings", function () {
+    it("Has correct values for start/end times", async function () {
+      expect(
+        await dutchMinterContract.getMintStartTime()
+      ).to.equal(startOfPeriod);
+      expect(
+        await dutchMinterContract.getMintEndTime()
+      ).to.equal(endOfPeriod);
+    });
+
+    it("Handles mint active correctly", async function () {
+      expect(await dutchMinterContract.getMintActive()).to.false;
+      await advanceTime(prePeriodDuration + 1);
+      expect(await dutchMinterContract.getMintActive()).to.true;
+      await advanceTime(periodDuration / 2);
+      expect(await dutchMinterContract.getMintActive()).to.true;
+      await advanceTime(periodDuration / 2);
+      expect(await dutchMinterContract.getMintActive()).to.false;
+    });
   });
 
   describe("Check prices", function () {
