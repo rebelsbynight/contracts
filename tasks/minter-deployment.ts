@@ -33,7 +33,8 @@ minterTask("deploy-multi-minter", "Deploy multi-merkle-proof minter")
         taskArgs.totalMintLimit,
         startTimestamp,
         endTimestamp,
-        mintInfo))
+        mintInfo,
+        {type: 1}))
       .then((result) => {
         console.log(`Contract address: ${result.address}`);
       });
@@ -56,7 +57,8 @@ minterTask("deploy-merkle-minter", "Deploy merkle proof minter")
         taskArgs.merkleRoot,
         taskArgs.userMintPrice,
         startTimestamp,
-        endTimestamp))
+        endTimestamp,
+        {type: 1}))
       .then((result) => {
         console.log(`Contract address: ${result.address}`);
       });
@@ -79,7 +81,8 @@ minterTask("deploy-dutch-minter", "Deploy public dutch auction minter")
         taskArgs.startPrice,
         taskArgs.endPrice,
         startTimestamp,
-        endTimestamp))
+        endTimestamp,
+        {type: 1}))
       .then((result) => {
         console.log(`Contract address: ${result.address}`);
       });

@@ -26,6 +26,7 @@
     "hardhat-gas-reporter": "^1.0.8"
   },
   "dependencies": {
+    "@ethersproject/hardware-wallets": "^5.6.1",
     "dotenv": "^16.0.1",
     "merkletreejs": "^0.2.31",
     "ts-node": "^10.8.0",

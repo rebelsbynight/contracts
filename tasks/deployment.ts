@@ -14,9 +14,11 @@ task("deploy-contract", "Deploy main Rebels contract")
     return hre.ethers
       .getContractFactory(taskArgs.contractType, getWallet())
       .then((contractFactory) => contractFactory.deploy(
-        taskArgs.name, taskArgs.symbol, taskArgs.maxSupply))
-      .then((result) => {
-        console.log(`Contract address: ${result.address}`);
+        taskArgs.name, taskArgs.symbol, taskArgs.maxSupply,
+        {type: 1}))
+      .then((contract: Contract) => {
+        console.log(`TX hash: ${contract.deployTransaction.hash}`);
+        console.log(`Contract address: ${contract.address}`);
       });
   });
 
@@ -25,8 +27,10 @@ task("deploy-baseuri-renderer", "Deploy basic baseURI-style renderer")
   .setAction(async (taskArgs, hre) => {
     return hre.ethers
       .getContractFactory("BaseURIRenderer", getWallet())
-      .then((contractFactory) => contractFactory.deploy(taskArgs.baseUri))
-      .then((result) => {
-        console.log(`Contract address: ${result.address}`);
+      .then((contractFactory) => contractFactory.deploy(
+        taskArgs.baseUri, {type: 1}))
+      .then((contract: Contract) => {
+        console.log(`TX hash: ${contract.deployTransaction.hash}`);
+        console.log(`Contract address: ${contract.address}`);
       });
   });
