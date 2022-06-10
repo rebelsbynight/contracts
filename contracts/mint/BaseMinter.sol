@@ -11,8 +11,8 @@ abstract contract BaseMinter is IRebelsMintAuthorizer, IRebelsMintInfo, ERC165St
   address private immutable _entryPoint;
   string private _mintName;
 
-  uint256 private immutable _totalMintLimit;
-  uint256 private _totalMintCount;
+  uint256 internal immutable _totalMintLimit;
+  uint256 internal _totalMintCount;
 
   uint256 internal immutable _startTime;
   uint256 internal immutable _endTime;

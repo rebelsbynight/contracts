@@ -19,6 +19,28 @@ function convertTimes(startTime: string, endTime: string) {
     return [startDate.getTime() / 1000, endDate.getTime() / 1000];
 }
 
+minterTask("deploy-block-minter", "Deploy block minter")
+  .addParam("minterAddress", "Address allowed to mint the block", undefined, types.string)
+  .addParam("userMintPrice", "Unit price of each NFT", undefined, types.int)
+  .setAction(async (taskArgs, hre) => {
+    const [startTimestamp, endTimestamp] =
+        convertTimes(taskArgs.startTime, taskArgs.endTime);
+    return hre.ethers
+      .getContractFactory("BlockMintAuthorizer", getWallet())
+      .then((contractFactory) => contractFactory.deploy(
+        env("DEPLOYED_NIGHTCARD_CONTRACT"),
+        taskArgs.mintName,
+        taskArgs.totalMintLimit,
+        taskArgs.minterAddress,
+        taskArgs.userMintPrice,
+        startTimestamp,
+        endTimestamp,
+        {type: 1}))
+      .then((result) => {
+        console.log(`Contract address: ${result.address}`);
+      });
+  });
+
 minterTask("deploy-multi-minter", "Deploy multi-merkle-proof minter")
   .addParam("mintInfoFile", "File containing the complete MintInfo array in JSON format", undefined, types.string)
   .setAction(async (taskArgs, hre) => {
