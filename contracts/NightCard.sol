@@ -40,7 +40,7 @@ import "./mint/IRebelsMintAuthorizer.sol";
 import "./render/IRebelsRenderer.sol";
 
 abstract contract RevealInterface {
-  function mint(address to, uint256[] calldata tokenIDs) public virtual;
+  function mint(address to, uint256[] calldata tokenIDs) external virtual;
 }
 
 contract NightCard is ERC721A, Ownable {
