@@ -65,7 +65,7 @@ minterTask("deploy-multi-minter", "Deploy multi-merkle-proof minter")
 minterTask("deploy-merkle-minter", "Deploy merkle proof minter")
   .addParam("userMintLimit", "Maximum number of NFTs per minter", undefined, types.int)
   .addParam("merkleRoot", "Root hash of the merkle tree", undefined, types.string)
-  .addParam("userMintPrice", "Unit price of each NFT", undefined, types.int)
+  .addParam("userMintPrice", "Unit price of each NFT")
   .setAction(async (taskArgs, hre) => {
     const [startTimestamp, endTimestamp] =
         convertTimes(taskArgs.startTime, taskArgs.endTime);
