@@ -34,3 +34,16 @@ task("deploy-baseuri-renderer", "Deploy basic baseURI-style renderer")
         console.log(`Contract address: ${contract.address}`);
       });
   });
+
+task("deploy-fixed-renderer", "Deploy fixed renderer")
+  .addParam("uri", "Unique URI token metadata", undefined, types.string)
+  .setAction(async (taskArgs, hre) => {
+    return hre.ethers
+      .getContractFactory("FixedURIRenderer", getWallet())
+      .then((contractFactory) => contractFactory.deploy(
+        taskArgs.uri, {type: 1}))
+      .then((contract: Contract) => {
+        console.log(`TX hash: ${contract.deployTransaction.hash}`);
+        console.log(`Contract address: ${contract.address}`);
+      });
+  });
