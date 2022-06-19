@@ -20,6 +20,22 @@ task("set-provenance-hash", "Set the NFT collection's provenance hash")
       });
   });
 
+task("set-contract-uri", "Set the NFT collection's contract metadata URI")
+  .addParam("uri", "Contract metadata URI", undefined, types.string)
+  .setAction(async (taskArgs, hre) => {
+    return getRebelsContract(hre)
+      .then((contract: Contract) => {
+        console.log(`Setting contract metadata URI to '${taskArgs.uri}'`);
+        return contract.setContractURI(taskArgs.uri, {
+          gasLimit: 500_000,
+          type: 1,
+        });
+      })
+      .then((tr: TransactionResponse) => {
+        console.log(`TX hash: ${tr.hash}`);
+      });
+  });
+
 task("set-renderer-address", "Set the NFT collection's rendering contract address")
   .addParam("address", "Rendering contract address", undefined, types.string)
   .setAction(async (taskArgs, hre) => {
