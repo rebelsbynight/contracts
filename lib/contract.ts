@@ -41,6 +41,24 @@ export function getRebelsContract(
   return getContractAt(hre, "Rebels", getRebelsContractAddress(), getWallet());
 }
 
+export function getHonoraryContractAddress() {
+  const ethNetwork = env("ETH_NETWORK");
+
+  if (ethNetwork === "mainnet") {
+    return env("MAINNET_DEPLOYED_HONORARY_CONTRACT");
+  } else if (ethNetwork === "rinkeby") {
+    return env("RINKEBY_DEPLOYED_HONORARY_CONTRACT");
+  } else {
+    throw `Unrecognized network ${ethNetwork}`;
+  }
+}
+
+export function getHonoraryContract(
+  hre: HardhatRuntimeEnvironment
+): Promise<Contract> {
+  return getContractAt(hre, "HonoraryRebels", getHonoraryContractAddress(), getWallet());
+}
+
 export function getMintContract(
   hre: HardhatRuntimeEnvironment
 ): Promise<Contract> {

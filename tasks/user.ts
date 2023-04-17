@@ -1,7 +1,11 @@
 import { task, types } from "hardhat/config";
 import { Contract, constants } from "ethers";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
-import { getNightCardContract, getMintContract } from "../lib/contract";
+import {
+  getNightCardContract,
+  getMintContract,
+  getHonoraryContract
+} from "../lib/contract";
 
 task("mint-nft", "Mint an NFT")
   .addParam("count", "Number of units to mint", undefined, types.int)
@@ -20,6 +24,24 @@ task("mint-nft", "Mint an NFT")
         console.log(`TX hash: ${tr.hash}`);
       });
   });
+
+task("mint-honorary", "Mint an NFT")
+  .addParam("to", "Recipient address of the new NFT")
+  .setAction(async (taskArgs, hre) => {
+    return getHonoraryContract(hre)
+      .then((contract: Contract) => {
+        const overrides = {
+          gasLimit: 500_000,
+          type: 1
+        };
+        console.log(`Minting new NFT to ${taskArgs.to}`);
+        return contract.mint(taskArgs.to, overrides);
+      })
+      .then((tr: TransactionResponse) => {
+        console.log(`TX hash: ${tr.hash}`);
+      });
+  });
+
 
 task("reveal-nft", "Mint an NFT")
   .addParam("id", "The token ID of the NFT to reveal", undefined, types.int)
