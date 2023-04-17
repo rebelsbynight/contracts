@@ -2,8 +2,8 @@ import { task, types } from "hardhat/config";
 import { Contract } from "ethers";
 import fs from "fs";
 
-import { env } from "../lib/env";
 import { getWallet } from "../lib/wallet";
+import { getNightCardContractAddress } from "../lib/contract";
 
 function minterTask(name: string, description: string) {
   return task(name, description)
@@ -28,7 +28,7 @@ minterTask("deploy-block-minter", "Deploy block minter")
     return hre.ethers
       .getContractFactory("BlockMintAuthorizer", getWallet())
       .then((contractFactory) => contractFactory.deploy(
-        env("DEPLOYED_NIGHTCARD_CONTRACT"),
+        getNightCardContractAddress(),
         taskArgs.mintName,
         taskArgs.totalMintLimit,
         taskArgs.minterAddress,
@@ -50,7 +50,7 @@ minterTask("deploy-multi-minter", "Deploy multi-merkle-proof minter")
     return hre.ethers
       .getContractFactory("MultiMintAuthorizer", getWallet())
       .then((contractFactory) => contractFactory.deploy(
-        env("DEPLOYED_NIGHTCARD_CONTRACT"),
+        getNightCardContractAddress(),
         taskArgs.mintName,
         taskArgs.totalMintLimit,
         startTimestamp,
@@ -72,7 +72,7 @@ minterTask("deploy-merkle-minter", "Deploy merkle proof minter")
     return hre.ethers
       .getContractFactory("MerkleMintAuthorizer", getWallet())
       .then((contractFactory) => contractFactory.deploy(
-        env("DEPLOYED_NIGHTCARD_CONTRACT"),
+        getNightCardContractAddress(),
         taskArgs.mintName,
         taskArgs.totalMintLimit,
         taskArgs.userMintLimit,
@@ -96,7 +96,7 @@ minterTask("deploy-dutch-minter", "Deploy public dutch auction minter")
     return hre.ethers
       .getContractFactory("DutchMintAuthorizer", getWallet())
       .then((contractFactory) => contractFactory.deploy(
-        env("DEPLOYED_NIGHTCARD_CONTRACT"),
+        getNightCardContractAddress(),
         taskArgs.mintName,
         taskArgs.totalMintLimit,
         taskArgs.userMintLimit,

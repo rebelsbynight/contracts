@@ -13,8 +13,25 @@ task("mint-nft", "Mint an NFT")
           gasLimit: 500_000,
           value: taskArgs.value,
         };
-        console.log(`Minting '${taskArgs.count}' NFTs`);
+        console.log(`Minting ${taskArgs.count} NFTs`);
         return contract.mint(taskArgs.count, [], overrides);
+      })
+      .then((tr: TransactionResponse) => {
+        console.log(`TX hash: ${tr.hash}`);
+      });
+  });
+
+task("reveal-nft", "Mint an NFT")
+  .addParam("id", "The token ID of the NFT to reveal", undefined, types.int)
+  .setAction(async (taskArgs, hre) => {
+    return getNightCardContract(hre)
+      .then((contract: Contract) => {
+        const overrides = {
+          gasLimit: 500_000,
+          value: taskArgs.value,
+        };
+        console.log(`Revealing NFT #${taskArgs.id}`);
+        return contract.reveal([taskArgs.id], overrides);
       })
       .then((tr: TransactionResponse) => {
         console.log(`TX hash: ${tr.hash}`);
