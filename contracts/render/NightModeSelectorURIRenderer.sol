@@ -53,4 +53,9 @@ contract NightModeSelectorURIRenderer is IRebelsRenderer, ERC165 {
         nightModeEnabled[id] = enable;
         emit NightModeUpdated(id, enable);
     }
+
+    // Function to check night mode status for a specific token
+    function getNightMode(uint256 id) external view returns (bool) {
+        return nightModeEnabled[id];
+    }
 }
