@@ -54,3 +54,20 @@ task("deploy-fixed-renderer", "Deploy fixed renderer")
         console.log(`Contract address: ${contract.address}`);
       });
   });
+
+
+task("deploy-nightmode-renderer", "Deploy Night Mode renderer")
+  .addParam("baseUri", "Base URI of token metadata", undefined, types.string)
+  .setAction(async (taskArgs, hre) => {
+    const wallet = getWallet();
+    console.log(`Deploying contract with address: ${await wallet.getAddress()}`);
+
+    return hre.ethers
+      .getContractFactory("NightModeSelectorURIRenderer", wallet)
+      .then((contractFactory) => contractFactory.deploy(
+        taskArgs.baseUri, {type: 1}))
+      .then((contract: Contract) => {
+        console.log(`TX hash: ${contract.deployTransaction.hash}`);
+        console.log(`Contract address: ${contract.address}`);
+      });
+  });
