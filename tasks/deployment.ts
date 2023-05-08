@@ -4,6 +4,7 @@ import { TransactionResponse } from "@ethersproject/abstract-provider";
 
 import { env } from "../lib/env";
 import { getWallet } from "../lib/wallet";
+import { getRebelsContractAddress } from "../lib/contract";
 
 task("deploy-contract", "Deploy main Rebels contract")
   .addParam("contractType", "Type of contract to deploy", undefined, types.string)
@@ -49,6 +50,19 @@ task("deploy-fixed-renderer", "Deploy fixed renderer")
       .getContractFactory("FixedURIRenderer", getWallet())
       .then((contractFactory) => contractFactory.deploy(
         taskArgs.uri, {type: 1}))
+      .then((contract: Contract) => {
+        console.log(`TX hash: ${contract.deployTransaction.hash}`);
+        console.log(`Contract address: ${contract.address}`);
+      });
+  });
+
+task("deploy-nightmode-renderer", "Deploy Night Mode renderer")
+  .addParam("baseUri", "Base URI of token metadata", undefined, types.string)
+  .setAction(async (taskArgs, hre) => {
+    return hre.ethers
+      .getContractFactory("NightModeSelectorURIRenderer", getWallet())
+      .then((contractFactory) => contractFactory.deploy(
+        taskArgs.baseUri, getRebelsContractAddress(), {type: 1}))
       .then((contract: Contract) => {
         console.log(`TX hash: ${contract.deployTransaction.hash}`);
         console.log(`Contract address: ${contract.address}`);
