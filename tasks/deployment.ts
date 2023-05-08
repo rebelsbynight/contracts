@@ -59,17 +59,10 @@ task("deploy-nightmode-renderer", "Deploy Night Mode renderer")
   .addParam("baseUri", "Base URI of token metadata", undefined, types.string)
   .addParam("nftAddress", "Rebels collection contract address", undefined, types.string)
   .setAction(async (taskArgs, hre) => {
-    const wallet = getWallet();
-    console.log(`Deploying contract with address: ${await wallet.getAddress()}`);
-
-    let transaction = {};
-    transaction.type = 1
-    transaction.gasLimit = ethers.BigNumber.from("3000000");
-
     return hre.ethers
-      .getContractFactory("NightModeSelectorURIRenderer", wallet)
+      .getContractFactory("NightModeSelectorURIRenderer", getWallet())
       .then((contractFactory) => contractFactory.deploy(
-        taskArgs.baseUri, taskArgs.nftAddress, transaction))
+        taskArgs.baseUri, taskArgs.nftAddress, {type: 1}))
       .then((contract: Contract) => {
         console.log(`TX hash: ${contract.deployTransaction.hash}`);
         console.log(`Contract address: ${contract.address}`);
