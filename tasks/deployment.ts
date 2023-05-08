@@ -58,7 +58,6 @@ task("deploy-fixed-renderer", "Deploy fixed renderer")
 
 task("deploy-nightmode-renderer", "Deploy Night Mode renderer")
   .addParam("baseUri", "Base URI of token metadata", undefined, types.string)
-  .addParam("nftAddress", "Rebels collection contract address", undefined, types.string)
   .setAction(async (taskArgs, hre) => {
     return hre.ethers
       .getContractFactory("NightModeSelectorURIRenderer", getWallet())
