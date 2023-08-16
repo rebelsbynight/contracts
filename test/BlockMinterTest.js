@@ -46,7 +46,7 @@ describe("Block minting contract", function () {
           1,  // minting 1
           []
         )
-      ).to.be.revertedWith("Trying to mint more");
+      ).to.be.revertedWith("Trying to mint more than total allowed");
     });
 
     it("Fail auth if not authorized", async function () {

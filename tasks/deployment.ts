@@ -68,3 +68,42 @@ task("deploy-nightmode-renderer", "Deploy Night Mode renderer")
         console.log(`Contract address: ${contract.address}`);
       });
   });
+
+task("deploy-optimized-nightmode-renderer", "Deploy Optimized Night Mode renderer")
+  .addParam("baseUri", "Base URI of token metadata", undefined, types.string)
+  .addParam("nftAddress", "Rebels collection contract address", undefined, types.string)
+  .setAction(async (taskArgs, hre) => {
+    let transaction = {};
+    transaction.type = 1
+    transaction.gasLimit = ethers.BigNumber.from("3000000");
+    return hre.ethers
+      .getContractFactory("OptimizedNightModeSelectorURIRenderer", getWallet())
+      .then((contractFactory) => contractFactory.deploy(
+        taskArgs.baseUri, taskArgs.nftAddress, transaction))
+      .then((contract: Contract) => {
+        console.log(`TX hash: ${contract.deployTransaction.hash}`);
+        console.log(`Contract address: ${contract.address}`);
+      });
+  });
+
+task("deploy-customization-renderer", "Deploy Optimized Night Mode renderer")
+  .addParam("normalModeBaseUri", "Normal Mode Base URI of token metadata", undefined, types.string)
+  .addParam("nightModeBaseUri", "Night Mode Base URI of token metadata", undefined, types.string)
+  .addParam("ultraModeBaseUri", "Ultra Mode Base URI of token metadata", undefined, types.string)
+  .addParam("nftAddress", "Rebels collection contract address", undefined, types.string)
+  .setAction(async (taskArgs, hre) => {
+
+    let transaction = {};
+    transaction.type = 2; // EIP-1559 transaction
+    transaction.maxFeePerGas = ethers.BigNumber.from("2600000000")
+    transaction.maxPriorityFeePerGas = ethers.BigNumber.from("2000000000");
+
+    return hre.ethers
+      .getContractFactory("OptimizedNightModeSelectorURIRenderer", getWallet())
+      .then((contractFactory) => contractFactory.deploy(
+        taskArgs.normalModeBaseUri, taskArgs.nightModeBaseUri, taskArgs.ultraModeBaseUri, taskArgs.nftAddress, transaction))
+      .then((contract: Contract) => {
+        console.log(`TX hash: ${contract.deployTransaction.hash}`);
+        console.log(`Contract address: ${contract.address}`);
+      });
+  });
