@@ -19,6 +19,7 @@ module.exports = {
   networks: {
     mainnet: {
     url: "https://mainnet.infura.io/v3/18ea48985537440891ba50c52e7254c3",
+    allowUnlimitedContractSize: true
     }
   },
   etherscan: {
