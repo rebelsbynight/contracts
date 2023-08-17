@@ -83,16 +83,4 @@ contract CustomizationSelectorURIRenderer is IRebelsRenderer, ERC165 {
     function getUltraMode(uint256 id) public view returns (bool) {
         return ultraModeEnabled.get(id);
     }
-
-    function setNormalModeBaseURI(string memory newBaseURI) external {
-        normalModeBaseURI = newBaseURI;
-    }
-
-    function setNightModeBaseURI(string memory newNightModeBaseURI) external {
-        nightModeBaseURI = newNightModeBaseURI;
-    }
-
-    function setUltraModeBaseURI(string memory newUltraModeBaseURI) external {
-        ultraModeBaseURI = newUltraModeBaseURI;
-    }
 }

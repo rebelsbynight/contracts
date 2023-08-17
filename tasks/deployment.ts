@@ -92,16 +92,10 @@ task("deploy-customization-renderer", "Deploy Optimized Night Mode renderer")
   .addParam("ultraModeBaseUri", "Ultra Mode Base URI of token metadata", undefined, types.string)
   .addParam("nftAddress", "Rebels collection contract address", undefined, types.string)
   .setAction(async (taskArgs, hre) => {
-
-    let transaction = {};
-    transaction.type = 2; // EIP-1559 transaction
-    transaction.maxFeePerGas = ethers.BigNumber.from("2600000000")
-    transaction.maxPriorityFeePerGas = ethers.BigNumber.from("2000000000");
-
     return hre.ethers
-      .getContractFactory("OptimizedNightModeSelectorURIRenderer", getWallet())
+      .getContractFactory("CustomizationSelectorURIRenderer", getWallet())
       .then((contractFactory) => contractFactory.deploy(
-        taskArgs.normalModeBaseUri, taskArgs.nightModeBaseUri, taskArgs.ultraModeBaseUri, taskArgs.nftAddress, transaction))
+        taskArgs.normalModeBaseUri, taskArgs.nightModeBaseUri, taskArgs.ultraModeBaseUri, taskArgs.nftAddress, {type: 1}))
       .then((contract: Contract) => {
         console.log(`TX hash: ${contract.deployTransaction.hash}`);
         console.log(`Contract address: ${contract.address}`);
