@@ -28,7 +28,7 @@ describe("CustomizationSelectorURIRenderer Unit Tests", () => {
   it("Should revert if non-owner attempts to update night mode", async () => {
     await rebels.connect(owner).setMinterAddress(owner.address);
     await rebels.connect(owner).mint(owner.address, [1]);
-    await expect(customizationRenderer.connect(addr1).setNightMode(1)).to.be.revertedWith("Not token owner");
+    await expect(customizationRenderer.connect(addr1).setNightMode(1)).to.be.revertedWith("NotTokenOwner");
   });
 
   it("Should set night mode correctly for token owner", async () => {
@@ -49,7 +49,7 @@ describe("CustomizationSelectorURIRenderer Unit Tests", () => {
   it("Should revert if non-owner attempts to update ultra mode", async () => {
     await rebels.connect(owner).setMinterAddress(owner.address);
     await rebels.connect(owner).mint(owner.address, [1]);
-    await expect(customizationRenderer.connect(addr1).setUltraMode(1)).to.be.revertedWith("Not token owner");
+    await expect(customizationRenderer.connect(addr1).setUltraMode(1)).to.be.revertedWith("NotTokenOwner");
   });
 
   it("Should set ultra mode correctly for token owner", async () => {
@@ -84,5 +84,20 @@ describe("CustomizationSelectorURIRenderer Unit Tests", () => {
     expect(await customizationRenderer.getUltraMode(1)).to.be.false;
   });
 
+  it("Should return a different token URI for each mode", async () => {
+    await rebels.connect(owner).setMinterAddress(owner.address);
+    await rebels.connect(owner).mint(owner.address, [1]);
 
+    expect((await customizationRenderer.tokenURI(1)).includes('night')).to.be.false;
+    expect((await customizationRenderer.tokenURI(1)).includes('ultra')).to.be.false;
+
+    await customizationRenderer.connect(owner).setNightMode(1);
+    expect((await customizationRenderer.tokenURI(1)).includes('night')).to.be.true;
+    expect((await customizationRenderer.tokenURI(1)).includes('ultra')).to.be.false;
+
+
+    await customizationRenderer.connect(owner).setUltraMode(1);
+    expect((await customizationRenderer.tokenURI(1)).includes('night')).to.be.false;
+    expect((await customizationRenderer.tokenURI(1)).includes('ultra')).to.be.true;
+  });
 });
