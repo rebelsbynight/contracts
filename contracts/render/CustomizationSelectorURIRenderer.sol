@@ -5,24 +5,22 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import { LibBitmap } from "solady/src/utils/LibBitmap.sol";
 
 import "./IRebelsRenderer.sol";
 
 contract CustomizationSelectorURIRenderer is IRebelsRenderer, ERC165 {
-    using LibBitmap for LibBitmap.Bitmap;
-
     string public normalModeBaseURI;
     string public nightModeBaseURI;
     string public ultraModeBaseURI;
     IERC721 public rebelsNFT;
 
-    // Bit maps to store night and ultra mode status for each token
-    LibBitmap.Bitmap nightModeEnabled;
-    LibBitmap.Bitmap ultraModeEnabled;
+    // Bit map to store night and ultra mode statuses for each token
+    uint8 internal constant NIGHT_MODE_FLAG = 0x01;
+    uint8 internal constant ULTRA_MODE_FLAG = 0x02;
+    mapping(uint256 => uint8) statuses;
 
     constructor(string memory normalModeBaseURI_, string memory nightModeBaseURI_, string memory ultraModeBaseURI_, address nftAddress) {
-        require(nftAddress != address(0), "NFT address cannot be the zero address");
+        if (nftAddress == address(0)) revert CantBeZeroAddr();
 
         normalModeBaseURI = normalModeBaseURI_;
         nightModeBaseURI = nightModeBaseURI_;
@@ -30,6 +28,24 @@ contract CustomizationSelectorURIRenderer is IRebelsRenderer, ERC165 {
 
         rebelsNFT = IERC721(nftAddress);
     }
+
+    // Bitfield related operations
+    function get(uint256 index, uint8 flag) internal view returns (bool isSet) {
+        uint8 b = statuses[index] & flag;
+        /// @solidity memory-safe-assembly
+        assembly {
+            isSet := b
+        }
+    }
+
+    function set(uint256 index, uint8 flag) internal {
+        statuses[index] |= flag;
+    }
+
+    function unset(uint256 index, uint8 flag) internal {
+        statuses[index] &= ~flag;
+    }
+    // ------------------------------
 
     function tokenURI(uint256 id) external view override returns (string memory) {
         string memory idStr = Strings.toString(id);
@@ -51,36 +67,36 @@ contract CustomizationSelectorURIRenderer is IRebelsRenderer, ERC165 {
     }
 
     function setNightMode(uint256 id) external {
-        require(rebelsNFT.ownerOf(id) == msg.sender, "Not token owner");
-        nightModeEnabled.set(id);
-        if (getUltraMode(id)) {
-            ultraModeEnabled.unset(id);
+        if (rebelsNFT.ownerOf(id) != msg.sender) revert NotTokenOwner();
+        set(id, NIGHT_MODE_FLAG);
+        if (get(id, ULTRA_MODE_FLAG)) {
+            unset(id, ULTRA_MODE_FLAG);
         }
     }
 
     function unsetNightMode(uint256 id) external {
-        require(rebelsNFT.ownerOf(id) == msg.sender, "Not token owner");
-        nightModeEnabled.unset(id);
+        if (rebelsNFT.ownerOf(id) != msg.sender) revert NotTokenOwner();
+        unset(id, NIGHT_MODE_FLAG);
     }
 
     function setUltraMode(uint256 id) external {
-        require(rebelsNFT.ownerOf(id) == msg.sender, "Not token owner");
-        ultraModeEnabled.set(id);
-        if (nightModeEnabled.get(id)) {
-            nightModeEnabled.unset(id);
+        if (rebelsNFT.ownerOf(id) != msg.sender) revert NotTokenOwner();
+        set(id, ULTRA_MODE_FLAG);
+        if (get(id, NIGHT_MODE_FLAG)) {
+            unset(id, NIGHT_MODE_FLAG);
         }
     }
 
     function unsetUltraMode(uint256 id) external {
-        require(rebelsNFT.ownerOf(id) == msg.sender, "Not token owner");
-        ultraModeEnabled.unset(id);
+        if (rebelsNFT.ownerOf(id) != msg.sender) revert NotTokenOwner();
+        unset(id, ULTRA_MODE_FLAG);
     }
 
     function getNightMode(uint256 id) public view returns (bool) {
-        return nightModeEnabled.get(id);
+        return get(id, NIGHT_MODE_FLAG);
     }
 
     function getUltraMode(uint256 id) public view returns (bool) {
-        return ultraModeEnabled.get(id);
+        return get(id, ULTRA_MODE_FLAG);
     }
 }
