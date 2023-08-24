@@ -2,6 +2,7 @@
 
 ## Build and Test
 
+* Add `.env` file at the root of the project (use env.template as an example)
 * `npm install`
 * `npx hardhat compile`
 * `npx hardhat test`
@@ -36,6 +37,10 @@
     * `BaseURIRenderer.sol`, basic token metadata reference.
 * `test/`, smart contracts unit tests
 * `tasks/`, hardhat tasks used for deployment, administration, etc.
+* `env.template`, contains an example of `.env` file, with all the necessary environment variables to build and deploy the project
+
+## Environment variables
+* `ETHERSCAN_API_KEY` is optional and should contain your [Etherscan](https://etherscan.io/) API key.
 
 ## Bug Bounty Program
 
